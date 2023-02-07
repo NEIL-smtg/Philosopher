@@ -20,4 +20,24 @@
 # include <sys/time.h>
 # include <pthread.h>
 
+# define EAT 1
+# define THINK 2
+# define SLEEP 3
+
+typedef struct s_arg
+{
+	int		philo;
+	int		life;
+	int		eat;
+	int		sleep;
+	int		must_eat;
+	int		forks;
+	int		id;
+}	t_arg;
+
+//utils
+int		valid_atoi(char *str);
+long	pl_atoi(char *str);
+
+
 #endif
