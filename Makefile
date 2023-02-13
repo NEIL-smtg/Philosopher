@@ -1,5 +1,5 @@
 NAME		=	philosopher
-MAN_FILES	=	main utils
+MAN_FILES	=	main utils init pl_start
 MAN_DIR		=	philo/
 MOBJS_DIR	=	man_objs/
 MAN_SRCS	=	$(addprefix $(MAN_DIR), $(addsuffix .c, $(MAN_FILES)))
@@ -19,7 +19,7 @@ $(MOBJS_DIR)%.o : $(MAN_DIR)%.c
 	@$(GCC) -c $< -o $@
 
 $(NAME): $(MAN_OBJS)
-	@$(GCC) $(CFLAGS) $(MAN_OBJS) -g3 -pthread -o $(NAME)
+	@$(GCC) $(CFLAGS) $(MAN_OBJS) -pthread -o $(NAME)
 
 clean:
 	@$(RM) $(MOBJS_DIR)
