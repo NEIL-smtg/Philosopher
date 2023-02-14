@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/21 00:47:11 by suchua            #+#    #+#             */
-/*   Updated: 2023/02/13 17:56:19 by suchua           ###   ########.fr       */
+/*   Updated: 2023/02/14 17:14:34 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,4 @@ void	destroy_all(t_info *info)
 		pthread_mutex_destroy(&info->philo->right);
 		free(&info->philo[i]);
 	}
-	pthread_mutex_destroy(&info->mutex_print);
 }

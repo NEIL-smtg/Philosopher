@@ -23,6 +23,7 @@
 # define EAT 1
 # define SLEEP 2
 # define THINK 3
+# define DIE 4
 
 typedef struct s_pl_info
 {
@@ -37,6 +38,10 @@ typedef struct s_philo
 {
 	int				id;
 	int				is_eating;
+	int				is_die;
+	int				enough_food;
+	int				t_life;
+	long long		start_time;
 	pthread_t		th;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	right;
@@ -52,14 +57,18 @@ typedef struct s_info
 }	t_info;
 
 //process
-void	*pl_start(void *params);
+void		*pl_start(void *params);
 
 //init
-int		init(t_info *info, char **av, int ac);
+int			init(t_info *info, char **av, int ac);
+void		init_time(t_info *info);
 
 //utils
-int		valid_atoi(char *str);
-long	pl_atoi(char *str);
-void	destroy_all(t_info *info);
+int			valid_atoi(char *str);
+long		pl_atoi(char *str);
+void		destroy_all(t_info *info);
+
+//for time
+long long	get_time(void);
 
 #endif

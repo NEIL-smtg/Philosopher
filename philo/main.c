@@ -22,6 +22,7 @@ int	main(int ac, char **av)
 		write(2, "Invalid arguments / Wrong arguments !!\n", 39);
 		return (0);
 	}
+	init_time(&info);
 	i = -1;
 	while (++i < info.pl_info.n_philo)
 	{

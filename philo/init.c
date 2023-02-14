@@ -6,25 +6,37 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 13:16:03 by suchua            #+#    #+#             */
-/*   Updated: 2023/02/13 17:59:06 by suchua           ###   ########.fr       */
+/*   Updated: 2023/02/14 22:13:24 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	init_time(t_info *info)
+{
+	int			i;
+	long long	start_time;
+
+	i = -1;
+	start_time = get_time();
+	while (++i < info->pl_info.n_philo)
+		info->philo[i].start_time = start_time;
+}
 
 int	init_thread_list(t_info *info)
 {
 	int	i;
 
 	info->philo = malloc(sizeof(t_philo) * info->pl_info.n_philo);
-	if (!info->philo)
-		return (-1);
 	i = -1;
 	while (++i < info->pl_info.n_philo)
 	{
 		info->philo[i].id = i + 1;
 		info->philo[i].is_eating = 0;
+		info->philo[i].is_die = 0;
+		info->philo[i].enough_food = 0;
 		info->philo[i].pl_info = info->pl_info;
+		info->philo[i].t_life = info->pl_info.t_life;
 		info->philo[i].print = &info->mutex_print;
 		pthread_mutex_init(&info->philo[i].right, NULL);
 	}
