@@ -25,9 +25,7 @@ int	main(int ac, char **av)
 	init_time(&info);
 	i = -1;
 	while (++i < info.pl_info.n_philo)
-	{
 		pthread_create(&info.philo[i].th, NULL, &pl_start, &info.philo[i]);
-	}
 	i = -1;
 	while (++i < info.pl_info.n_philo)
 		pthread_join(info.philo[i].th, NULL);

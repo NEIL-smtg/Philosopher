@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/08 13:16:03 by suchua            #+#    #+#             */
-/*   Updated: 2023/02/14 22:13:24 by suchua           ###   ########.fr       */
+/*   Updated: 2023/02/15 19:48:31 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void	init_time(t_info *info)
 	i = -1;
 	start_time = get_time();
 	while (++i < info->pl_info.n_philo)
-		info->philo[i].start_time = start_time;
+	{
+		info->philo[i].t_start = start_time;
+		info->philo[i].t_last_eat = start_time;
+	}
 }
 
 int	init_thread_list(t_info *info)

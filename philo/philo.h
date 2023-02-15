@@ -41,7 +41,8 @@ typedef struct s_philo
 	int				is_die;
 	int				enough_food;
 	int				t_life;
-	long long		start_time;
+	long long		t_start;
+	long long		t_last_eat;
 	pthread_t		th;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	right;
@@ -68,7 +69,11 @@ int			valid_atoi(char *str);
 long		pl_atoi(char *str);
 void		destroy_all(t_info *info);
 
-//for time
+//pl_start utils
+void		remove_delay(int usleep_time);
 long long	get_time(void);
+int			check_must_eat(t_philo *philo);
+void		print_status(t_philo *philo, int type);
+void		get_pre_next(t_philo *philo, t_philo **pre, t_philo **next);
 
 #endif

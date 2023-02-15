@@ -1,5 +1,5 @@
 NAME		=	philosopher
-MAN_FILES	=	main utils init pl_start get_time
+MAN_FILES	=	main utils init pl_start get_time pl_utils
 MAN_DIR		=	philo/
 MOBJS_DIR	=	man_objs/
 MAN_SRCS	=	$(addprefix $(MAN_DIR), $(addsuffix .c, $(MAN_FILES)))
