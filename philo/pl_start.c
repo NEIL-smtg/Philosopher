@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 17:45:16 by suchua            #+#    #+#             */
-/*   Updated: 2023/02/15 20:30:11 by suchua           ###   ########.fr       */
+/*   Updated: 2023/02/20 20:27:59 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,21 @@ int	check_if_die(t_philo *philo)
 {
 	t_philo	*tmp;
 	int		i;
+	int		num_philo;
 
 	if (philo->t_life <= 0)
 	{
-		print_status(philo, DIE);
+		philo->is_die = 1;
+		printf("%lld %d is die\n", philo->t_last_eat + philo->pl_info.t_life
+			- philo->t_start, philo->id);
 		return (1);
 	}
 	tmp = philo;
 	i = 0;
-	while (tmp[i].id != 1)
-		--i;
-	while (i <= philo->pl_info.n_philo)
+	num_philo = philo->pl_info.n_philo;
+	while (tmp->id != 1)
+		--tmp;
+	while (i < num_philo)
 	{
 		if (tmp[i].is_die)
 			return (1);
@@ -35,17 +39,11 @@ int	check_if_die(t_philo *philo)
 	return (0);
 }
 
-int	pl_eat(t_philo *philo)
+int	handle_forks_lock(t_philo *philo)
 {
-	if (get_time() - philo->t_last_eat > philo->pl_info.t_life)
-	{
-		philo->is_die = 1;
-		print_status(philo, DIE);
-		return (0);
-	}
 	pthread_mutex_lock(&philo->right);
 	pthread_mutex_lock(philo->left);
-	if (philo->pl_info.must_eat >= 0 && check_must_eat(philo))
+	if (all_enough_food(philo))
 	{
 		pthread_mutex_unlock(&philo->right);
 		pthread_mutex_unlock(philo->left);
@@ -56,22 +54,31 @@ int	pl_eat(t_philo *philo)
 	remove_delay(philo->pl_info.t_eat);
 	pthread_mutex_unlock(&philo->right);
 	pthread_mutex_unlock(philo->left);
+	return (1);
+}
+
+int	pl_eat(t_philo *philo)
+{
+	if (get_time() - philo->t_last_eat > philo->pl_info.t_life)
+	{
+		philo->is_die = 1;
+		return (!print_status(philo, DIE));
+	}
+	if (!handle_forks_lock(philo))
+		return (0);
+	philo->t_life -= philo->pl_info.t_eat;
 	philo->is_eating = 0;
 	if (philo->pl_info.must_eat > 0)
 		philo->pl_info.must_eat--;
 	if (philo->pl_info.must_eat == 0)
-	{
 		philo->enough_food = 1;
-		// printf("cme : %d\n", check_must_eat(philo));
-		if (check_must_eat(philo))
-			return (0);
-	}
 	return (1);
 }
 
 void	reset_lifespan(t_philo *philo)
 {
-	philo->t_life = philo->pl_info.t_life;
+	if (philo->t_life != philo->pl_info.t_life)
+		philo->t_life = philo->pl_info.t_life;
 }
 
 void	*pl_start(void *params)
@@ -82,16 +89,19 @@ void	*pl_start(void *params)
 	while (1)
 	{
 		pthread_mutex_lock(philo->print);
-		print_status(philo, THINK);
+		if (!print_status(philo, THINK))
+			philo->is_eating = 1;
 		pthread_mutex_unlock(philo->print);
-		if (check_if_die(philo))
+		if (check_if_die(philo) || all_enough_food(philo))
 			break ;
 		reset_lifespan(philo);
 		if (!pl_eat(philo))
 			break ;
+		if (check_if_die(philo) || all_enough_food(philo))
+			break ;
 		print_status(philo, SLEEP);
 		remove_delay(philo->pl_info.t_sleep);
-		if (check_if_die(philo))
+		if (check_if_die(philo) || all_enough_food(philo))
 			break ;
 	}
 	return (NULL);

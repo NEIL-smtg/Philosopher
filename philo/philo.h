@@ -72,8 +72,8 @@ void		destroy_all(t_info *info);
 //pl_start utils
 void		remove_delay(int usleep_time);
 long long	get_time(void);
-int			check_must_eat(t_philo *philo);
-void		print_status(t_philo *philo, int type);
+int			all_enough_food(t_philo *philo);
+int			print_status(t_philo *philo, int type);
 void		get_pre_next(t_philo *philo, t_philo **pre, t_philo **next);
 
 #endif

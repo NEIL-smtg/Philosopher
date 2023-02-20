@@ -6,11 +6,19 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/15 14:24:00 by suchua            #+#    #+#             */
-/*   Updated: 2023/02/15 20:20:53 by suchua           ###   ########.fr       */
+/*   Updated: 2023/02/20 20:27:47 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+long long	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((long long)(tv.tv_sec * 1000 + tv.tv_usec / 1000));
+}
 
 void	remove_delay(int usleep_time)
 {
@@ -26,11 +34,11 @@ void	remove_delay(int usleep_time)
 			- (i.tv_sec * 1000 + i.tv_usec / 1000);
 		if (diff >= (long long) usleep_time)
 			break ;
-		usleep(50);
+		usleep(100);
 	}
 }
 
-int	check_must_eat(t_philo *philo)
+int	all_enough_food(t_philo *philo)
 {
 	t_philo	*tmp;
 	int		i;
@@ -64,7 +72,7 @@ void	get_pre_next(t_philo *philo, t_philo **pre, t_philo **next)
 		*next = philo + 1;
 }
 
-void	print_status(t_philo *philo, int type)
+int	print_status(t_philo *philo, int type)
 {
 	t_philo		*pre;
 	t_philo		*next;
@@ -72,25 +80,20 @@ void	print_status(t_philo *philo, int type)
 
 	diff = get_time() - philo->t_start;
 	if (type == SLEEP)
-	{
-		philo->t_life -= philo->pl_info.t_sleep;
-		printf("%lld : Philosopher %d is sleeping\n", diff, philo->id);
-	}
+		printf("%lld %d is sleeping\n", diff, philo->id);
 	if (type == EAT)
-		printf("%lld : Philosopher %d has taken a fork\n", diff, philo->id);
+		printf("%lld %d is eating\n", diff, philo->id);
 	if (type == DIE)
-		printf("%lld : Philosopher %d die\n", diff, philo->id);
+		printf("%lld %d die\n", diff, philo->id);
 	if (type == EAT || type == SLEEP || type == DIE)
-		return ;
+		return (1);
 	get_pre_next(philo, &pre, &next);
 	if (pre->is_eating || next->is_eating)
 	{
-		philo->t_life -= philo->pl_info.t_eat;
-		printf("%lld : Philosopher %d is thinking\n", diff, philo->id);
+		philo->t_life -= philo->pl_info.t_sleep;
+		printf("%lld %d is thinking\n", diff, philo->id);
+		return (1);
 	}
-	else
-	{
-		philo->is_eating = 1;
-		return ;
-	}
+	philo->t_life -= philo->pl_info.t_eat;
+	return (0);
 }
