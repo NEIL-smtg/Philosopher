@@ -29,6 +29,6 @@ int	main(int ac, char **av)
 	i = -1;
 	while (++i < info.pl_info.n_philo)
 		pthread_join(info.philo[i].th, NULL);
-	// destroy_all(&info);
+	destroy_all(&info);
 	return (0);
 }

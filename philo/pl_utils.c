@@ -34,7 +34,7 @@ void	remove_delay(int usleep_time)
 			- (i.tv_sec * 1000 + i.tv_usec / 1000);
 		if (diff >= (long long) usleep_time)
 			break ;
-		usleep(100);
+		usleep(50);
 	}
 }
 
@@ -46,8 +46,7 @@ int	all_enough_food(t_philo *philo)
 
 	tmp = philo;
 	num_philo = philo->pl_info.n_philo;
-	while (tmp->id != 1)
-		tmp--;
+	tmp -= tmp->id - 1;
 	i = -1;
 	while (++i < num_philo)
 	{
@@ -90,7 +89,6 @@ int	print_status(t_philo *philo, int type)
 	get_pre_next(philo, &pre, &next);
 	if (pre->is_eating || next->is_eating)
 	{
-		philo->t_life -= philo->pl_info.t_sleep;
 		printf("%lld %d is thinking\n", diff, philo->id);
 		return (1);
 	}

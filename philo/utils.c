@@ -62,8 +62,7 @@ void	destroy_all(t_info *info)
 
 	i = -1;
 	while (++i < info->pl_info.n_philo)
-	{
 		pthread_mutex_destroy(&info->philo->right);
-		free(&info->philo[i]);
-	}
+	free(info->philo);
+	pthread_mutex_destroy(&info->mutex_print);
 }
