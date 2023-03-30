@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/28 22:07:02 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 03:19:28 by suchua           ###   ########.fr       */
+/*   Created: 2023/03/30 20:09:39 by suchua            #+#    #+#             */
+/*   Updated: 2023/03/30 20:10:05 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int	valid_atoi(char *s)
 {

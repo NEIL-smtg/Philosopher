@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/28 21:23:52 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 19:03:08 by suchua           ###   ########.fr       */
+/*   Created: 2023/03/30 20:13:19 by suchua            #+#    #+#             */
+/*   Updated: 2023/03/30 21:17:09 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-int	main(int ac, char **av)
+void	*routine(void *params)
 {
-	t_info	info;
+	t_philo	*pl;
 
-	if (init(ac, av, &info) == -1)
-		return (1);
-	init_philo(&info);
-	return (0);
+	pl = (t_philo *) params;
+	if (pl->id % 2 == 0)
+	{
+		msg(THINK, pl);
+		usleep(100);
+	}
+	exit(EXIT_SUCCESS);
 }

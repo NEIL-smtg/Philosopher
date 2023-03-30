@@ -1,3 +1,0 @@
-# Philosopher
-
-Trying to solve dining philosopher problem using threadsssss....

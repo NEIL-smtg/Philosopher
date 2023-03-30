@@ -1,37 +1,56 @@
-NAME		=	philosopher
-MAN_FILES	=	main utils init pl_start pl_utils
+NAME		=	phil
+BONUS_NAME	=	phil_bonus
+FILES		=	main init routine utils routine_utils
+B_FILES		=	main init routine utils routine_utils
 MAN_DIR		=	philo/
-MOBJS_DIR	=	man_objs/
-MAN_SRCS	=	$(addprefix $(MAN_DIR), $(addsuffix .c, $(MAN_FILES)))
-MAN_OBJS	=	$(addprefix $(MOBJS_DIR), $(addsuffix .o, $(MAN_FILES)))
-GCC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra
-FTH			=	-fsanitize=thread -g3
+BONUS_DIR	=	philo_bonus/
+OBJS_DIR	=	objs/
+B_OBJS_DIR	=	bonus_objs/
+SRCS		=	$(addprefix $(MAN_DIR), $(addsuffix .c, $(FILES)))
+OBJS		=	$(addprefix $(OBJS_DIR), $(addsuffix .o, $(FILES)))
+B_SRCS		=	$(addprefix $(BONUS_DIR), $(addsuffix .c, $(B_FILES)))
+B_OBJS		=	$(addprefix $(B_OBJS_DIR), $(addsuffix .o, $(B_FILES)))
+CC			=	gcc
+FLAGS		=	-Wall -Werror -Wextra
 FSAN		=	-fsanitize=address -g3
-RED			:=	$(shell tput -Txterm setaf 1)
-RM			=	-rm -rf
+PTHREAD		=	-pthread
+RM			=	rm -rf
 
 all:
-	@mkdir -p $(MOBJS_DIR)
-	@make $(NAME)
-	@echo "$(RED)philo ready HEHHE..."
+	mkdir -p $(OBJS_DIR)
+	make $(NAME)
 
-$(MOBJS_DIR)%.o : $(MAN_DIR)%.c
-	@$(GCC) -c $< -o $@
+$(OBJS_DIR)%.o:$(MAN_DIR)%.c
+	$(CC) $(FLAGS) -c $< -o $@
 
-$(NAME): $(MAN_OBJS)
-	@$(GCC) $(CFLAGS) $(MAN_OBJS) -pthread -o $(NAME)
+$(NAME) : $(OBJS)
+	$(CC) $(FLAGS) $(FSAN) $(PTHREAD) -o $(NAME) $(OBJS)
+
+bonus:
+	mkdir -p $(B_OBJS_DIR)
+	make $(BONUS_NAME)
+
+$(B_OBJS_DIR)%.o:$(BONUS_DIR)%.c
+	$(CC) $(FLAGS) -c $< -o $@
+
+$(BONUS_NAME): $(B_OBJS)
+	$(CC) $(FLAGS) $(FSAN) -o $(BONUS_NAME) $(B_OBJS)
 
 clean:
-	@$(RM) $(MOBJS_DIR)
+	$(RM) $(OBJS_DIR) $(B_OBJS_DIR)
 
 fclean:
-	@make clean
-	@$(RM) $(NAME)
+	make clean
+	$(RM) $(NAME) $(BONUS_NAME)
 
 re:
-	@make fclean
-	@make all
+	make fclean
+	make all
+
+be:
+	make fclean
+	make bonus
 
 norm:
-	@norminette -R CheckForbiddenSourceHeader $(MAN_SRCS)
+	@norminette -R CheckForbiddenSourceHeader $(MAN_DIR)
+	@norminette -R CheckForbiddenSourceHeader $(BONUS_DIR)

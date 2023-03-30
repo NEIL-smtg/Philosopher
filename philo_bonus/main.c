@@ -5,19 +5,19 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/28 21:23:52 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 19:03:08 by suchua           ###   ########.fr       */
+/*   Created: 2023/03/28 21:24:23 by suchua            #+#    #+#             */
+/*   Updated: 2023/03/30 20:59:13 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 int	main(int ac, char **av)
 {
 	t_info	info;
 
 	if (init(ac, av, &info) == -1)
-		return (1);
+		exit(EXIT_FAILURE);
 	init_philo(&info);
-	return (0);
+	exit(info.pl_status);
 }
