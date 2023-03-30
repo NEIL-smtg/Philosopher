@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:08:45 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 21:14:43 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 04:07:20 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ void	destroy_sem(t_info *info)
 
 int	init_sem(t_info *info)
 {
-	info->print = sem_open("sem_print", O_CREAT, 0644, 1);
-	info->read = sem_open("sem_read", O_CREAT, 0644, 1);
-	info->modify = sem_open("sem_modify", O_CREAT, 0644, 1);
-	info->forks = sem_open("sem_forks", O_CREAT, 0644, info->nphilo);
+	destroy_sem(info);
+	info->print = sem_open("sem_print", O_CREAT, S_IRWXU, 0644, 1);
+	info->read = sem_open("sem_read", O_CREAT, S_IRWXU, 0644, 1);
+	info->modify = sem_open("sem_modify", O_CREAT, S_IRWXU, 0644, 1);
+	info->forks = sem_open("sem_forks", O_CREAT, S_IRWXU, 0644, info->nphilo);
 	if (info->print == SEM_FAILED || info->read == SEM_FAILED
 		|| info->modify == SEM_FAILED || info->forks == SEM_FAILED)
 		return (-1);
@@ -79,7 +80,6 @@ int	init(int ac, char **av, t_info *info)
 
 void	init_philo(t_info *info)
 {
-	pthread_t	th[200];
 	int			i;
 	t_philo		pl[200];
 	pid_t		id;
@@ -92,15 +92,13 @@ void	init_philo(t_info *info)
 		pl[i].id = i + 1;
 		pl[i].tdie = pl->info->tdie;
 		pl[i].t_start = get_time();
+		pl[i].is_eating = 0;
 		id = fork();
 		if (id == 0)
-			pthread_create(&th[i], NULL, routine, &pl[i]);
+			pthread_create(&pl[i].th, NULL, routine, &pl[i]);
 	}
 	i = -1;
 	while (++i < info->nphilo)
-	{
-		pthread_join(th[i], NULL);
 		waitpid(0, &info->pl_status, 0);
-	}
 	destroy_sem(info);
 }

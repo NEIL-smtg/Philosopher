@@ -34,7 +34,7 @@ $(B_OBJS_DIR)%.o:$(BONUS_DIR)%.c
 	$(CC) $(FLAGS) -c $< -o $@
 
 $(BONUS_NAME): $(B_OBJS)
-	$(CC) $(FLAGS) $(FSAN) -o $(BONUS_NAME) $(B_OBJS)
+	$(CC) $(FLAGS) -o $(BONUS_NAME) $(B_OBJS)
 
 clean:
 	$(RM) $(OBJS_DIR) $(B_OBJS_DIR)

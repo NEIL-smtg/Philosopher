@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 18:52:02 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 21:15:45 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 04:06:45 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 # include <pthread.h>
 # include <semaphore.h>
 # include <sys/time.h>
+# include <sys/wait.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <signal.h>
 
 # define EAT 1
 # define SLEEP 2
@@ -49,8 +53,10 @@ typedef struct s_philo
 	int				num_eat;
 	int				id;
 	int				tdie;
+	int				is_eating;
 	long long		t_start;
 	long long		t_last_eat;
+	pthread_t		th;
 }	t_philo;
 
 void		init_philo(t_info *info);
@@ -63,7 +69,6 @@ long long	get_time(void);
 void		remove_delay(int usleep_time);
 
 //routine
-//wait - 1 , post + 1
 void		*routine(void *params);
 
 //print pl status
