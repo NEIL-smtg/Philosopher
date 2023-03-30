@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:08:45 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/31 04:07:20 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 05:37:44 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,13 @@ void	init_philo(t_info *info)
 		pl[i].t_start = get_time();
 		pl[i].is_eating = 0;
 		id = fork();
+		if (id == -1)
+			return ;
 		if (id == 0)
-			pthread_create(&pl[i].th, NULL, routine, &pl[i]);
+			routine(&pl[i]);
 	}
 	i = -1;
 	while (++i < info->nphilo)
-		waitpid(0, &info->pl_status, 0);
+		waitpid(-1, NULL, 0);
 	destroy_sem(info);
 }

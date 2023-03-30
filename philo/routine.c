@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:59:29 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 18:33:25 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 05:29:24 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	pl_sleep(t_philo *pl)
 	if (someone_die(pl))
 		return (0);
 	pthread_mutex_lock(&pl->info->modify);
-	pl->tdie = pl->info->tsleep;
+	pl->tdie -= pl->info->tsleep;
 	pthread_mutex_unlock(&pl->info->modify);
 	return (1);
 }

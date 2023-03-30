@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 18:52:02 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/31 04:06:45 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 05:04:53 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_philo
 	int				is_eating;
 	long long		t_start;
 	long long		t_last_eat;
+	sem_t			*sem_eaten;
 	pthread_t		th;
 }	t_philo;
 
@@ -69,7 +70,7 @@ long long	get_time(void);
 void		remove_delay(int usleep_time);
 
 //routine
-void		*routine(void *params);
+void		routine(t_philo *pl);
 
 //print pl status
 void		msg(int type, t_philo *pl);
