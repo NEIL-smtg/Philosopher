@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:53:10 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 19:08:23 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 20:14:48 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ void	init_philo(t_info *info)
 		pl[i].info = info;
 		pl[i].num_eat = 0;
 		pl[i].t_start = get_time();
+		pl[i].t_last_eat = pl[i].t_start;
 		pl[i].tdie = pl->info->tdie;
 		pthread_create(&th[i], NULL, routine, &pl[i]);
 	}

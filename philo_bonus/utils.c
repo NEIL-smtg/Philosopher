@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:09:39 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/31 04:41:13 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/02 08:21:04 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,24 @@ int	ft_atoi(char *s)
 	while (s[i] >= '0' && s[i] <= '9')
 		total = total * 10 + s[i++] - '0';
 	return (total);
+}
+
+int	invalid_input(int ac, char **av)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (++i < ac)
+	{
+		j = -1;
+		while (av[i][++j])
+			if (av[i][j] < '0' || av[i][j] > '9')
+				return (1);
+		if (!valid_atoi(av[i]))
+			return (1);
+	}
+	return (0);
 }
 
 long long	get_time(void)

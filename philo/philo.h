@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:30:44 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 18:37:58 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 20:18:05 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void		msg(int type, t_philo *pl);
 int			all_eaten(t_philo *pl);
 int			someone_die(t_philo *pl);
 int			not_enough_time(t_philo *pl, int time);
+int			out_of_time(t_philo *pl);
 
 //utils
 int			valid_atoi(char *s);

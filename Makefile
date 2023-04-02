@@ -1,7 +1,7 @@
 NAME		=	phil
 BONUS_NAME	=	phil_bonus
 FILES		=	main init routine utils routine_utils
-B_FILES		=	main init routine utils routine_utils
+B_FILES		=	main init routine utils routine_utils libft libft_utils
 MAN_DIR		=	philo/
 BONUS_DIR	=	philo_bonus/
 OBJS_DIR	=	objs/

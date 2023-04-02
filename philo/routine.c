@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:59:29 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/31 05:29:24 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 20:17:51 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	pl_eat_utils(t_philo *pl)
 
 void	pl_eat(t_philo *pl)
 {
-	if (not_enough_time(pl, pl->info->teat))
+	if (not_enough_time(pl, pl->info->teat) || out_of_time(pl))
 		return ;
 	pthread_mutex_lock(&pl->left);
 	if (someone_die(pl))

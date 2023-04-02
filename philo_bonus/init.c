@@ -6,29 +6,11 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:08:45 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/31 05:37:44 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/02 21:31:28 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-
-int	invalid_input(int ac, char **av)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (++i < ac)
-	{
-		j = -1;
-		while (av[i][++j])
-			if (av[i][j] < '0' || av[i][j] > '9')
-				return (1);
-		if (!valid_atoi(av[i]))
-			return (1);
-	}
-	return (0);
-}
 
 void	destroy_sem(t_info *info)
 {
@@ -45,10 +27,10 @@ void	destroy_sem(t_info *info)
 int	init_sem(t_info *info)
 {
 	destroy_sem(info);
-	info->print = sem_open("sem_print", O_CREAT, S_IRWXU, 0644, 1);
-	info->read = sem_open("sem_read", O_CREAT, S_IRWXU, 0644, 1);
-	info->modify = sem_open("sem_modify", O_CREAT, S_IRWXU, 0644, 1);
-	info->forks = sem_open("sem_forks", O_CREAT, S_IRWXU, 0644, info->nphilo);
+	info->print = sem_open("sem_print", O_CREAT | S_IRWXU, 0644, 1);
+	info->read = sem_open("sem_read", O_CREAT | S_IRWXU, 0644, 1);
+	info->modify = sem_open("sem_modify", O_CREAT | S_IRWXU, 0644, 1);
+	info->forks = sem_open("sem_forks", O_CREAT | S_IRWXU, 0644, info->nphilo);
 	if (info->print == SEM_FAILED || info->read == SEM_FAILED
 		|| info->modify == SEM_FAILED || info->forks == SEM_FAILED)
 		return (-1);
@@ -65,8 +47,7 @@ int	init(int ac, char **av, t_info *info)
 	info->nphilo = ft_atoi(av[1]);
 	if (info->nphilo == 1)
 	{
-		printf("0 1 has taken a fork\n");
-		printf("0 1 die\n");
+		printf("0 1 has taken a fork\n0 1 die");
 		return (-1);
 	}
 	info->tdie = ft_atoi(av[2]);
@@ -76,6 +57,26 @@ int	init(int ac, char **av, t_info *info)
 	if (info->eat_req)
 		info->num_eat = ft_atoi(av[5]);
 	return (init_sem(info));
+}
+
+int	init_sem_eaten(t_philo *pl, int n)
+{
+	char	*s1;
+	char	*s2;
+
+	if (!pl->info->eat_req)
+		return (1);
+	s2 = ft_itoa(n);
+	s1 = ft_strjoin("sem_eaten_", s2);
+	sem_close(pl->eaten);
+	sem_unlink(s1);
+	pl->eaten = sem_open(s1, O_CREAT | S_IRWXU, 0644, 1);
+	free(s1);
+	free(s2);
+	if (pl->eaten == SEM_FAILED)
+		return (-1);
+	sem_wait(pl->eaten);
+	return (1);
 }
 
 void	init_philo(t_info *info)
@@ -90,17 +91,33 @@ void	init_philo(t_info *info)
 		pl[i].info = info;
 		pl[i].num_eat = 0;
 		pl[i].id = i + 1;
-		pl[i].tdie = pl->info->tdie;
 		pl[i].t_start = get_time();
-		pl[i].is_eating = 0;
+		pl[i].t_last_eat = get_time();
+		if (init_sem_eaten(&pl[i], i) == -1)
+			return ;
 		id = fork();
 		if (id == -1)
 			return ;
 		if (id == 0)
 			routine(&pl[i]);
 	}
+	if (pl->info->eat_req)
+		all_eaten(&pl);
+	waitpid(-1, NULL, 0);
+	kill(0, SIGINT);
+}
+
+void	*all_eaten(void *params)
+{
+	t_philo	*pl;
+	int		i;
+
+	pl = (t_philo *) params;
 	i = -1;
-	while (++i < info->nphilo)
-		waitpid(-1, NULL, 0);
-	destroy_sem(info);
+	if (fork() != 0)
+		return (NULL);
+	while (++i < pl->info->nphilo)
+		sem_wait(pl[i].eaten);
+	kill(0, SIGINT);
+	return (NULL);
 }

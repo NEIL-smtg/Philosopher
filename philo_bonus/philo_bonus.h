@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 18:52:02 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/31 05:04:53 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/02 19:32:22 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,25 +52,31 @@ typedef struct s_philo
 	t_info			*info;
 	int				num_eat;
 	int				id;
-	int				tdie;
-	int				is_eating;
 	long long		t_start;
 	long long		t_last_eat;
-	sem_t			*sem_eaten;
-	pthread_t		th;
+	pthread_t		exit_th;
+	sem_t			*eaten;
 }	t_philo;
 
 void		init_philo(t_info *info);
 int			init(int ac, char **av, t_info *info);
 
 //utils
+int			invalid_input(int ac, char **av);
 int			valid_atoi(char *s);
 int			ft_atoi(char *s);
 long long	get_time(void);
 void		remove_delay(int usleep_time);
 
+//libft
+char		*ft_strjoin(char const *s1, char const *s2);
+char		*ft_itoa(int n);
+size_t		ft_strlen(char const *s);
+
 //routine
 void		routine(t_philo *pl);
+int			not_enough_time(t_philo *pl, int time);
+void		*all_eaten(void *params);
 
 //print pl status
 void		msg(int type, t_philo *pl);

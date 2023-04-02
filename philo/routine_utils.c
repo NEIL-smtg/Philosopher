@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:18:12 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 18:46:06 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 20:17:56 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,26 @@ int	not_enough_time(t_philo *pl, int time)
 			msg(DIE, pl);
 		}
 		pthread_mutex_unlock(&pl->info->modify);
+		pthread_mutex_unlock(&pl->info->read);
+		return (1);
+	}
+	pthread_mutex_unlock(&pl->info->read);
+	return (0);
+}
+
+int	out_of_time(t_philo *pl)
+{
+	pthread_mutex_lock(&pl->info->read);
+	if (get_time() - pl->t_last_eat > pl->info->tdie)
+	{
+		pthread_mutex_lock(&pl->info->modify);
+		pl->info->die++;
+		pthread_mutex_unlock(&pl->info->modify);
+		if (pl->info->die == 1)
+		{
+			remove_delay(100);
+			msg(DIE, pl);
+		}
 		pthread_mutex_unlock(&pl->info->read);
 		return (1);
 	}
