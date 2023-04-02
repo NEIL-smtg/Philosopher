@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:08:45 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/02 21:31:28 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/02 21:36:28 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,19 +105,4 @@ void	init_philo(t_info *info)
 		all_eaten(&pl);
 	waitpid(-1, NULL, 0);
 	kill(0, SIGINT);
-}
-
-void	*all_eaten(void *params)
-{
-	t_philo	*pl;
-	int		i;
-
-	pl = (t_philo *) params;
-	i = -1;
-	if (fork() != 0)
-		return (NULL);
-	while (++i < pl->info->nphilo)
-		sem_wait(pl[i].eaten);
-	kill(0, SIGINT);
-	return (NULL);
 }

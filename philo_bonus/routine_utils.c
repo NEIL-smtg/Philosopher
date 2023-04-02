@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:06:54 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/02 07:40:09 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/02 21:36:32 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,19 @@ void	msg(int type, t_philo *pl)
 	else
 		printf("%d %d died\n", pl->info->tdie, pl->id);
 	sem_post(pl->info->print);
+}
+
+void	all_eaten(void *params)
+{
+	t_philo	*pl;
+	int		i;
+
+	pl = (t_philo *) params;
+	i = -1;
+	if (fork() != 0)
+		return ;
+	while (++i < pl->info->nphilo)
+		sem_wait(pl[i].eaten);
+	kill(0, SIGINT);
+	return ;
 }

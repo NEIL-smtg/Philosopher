@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 18:52:02 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/02 19:32:22 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/02 21:36:43 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ size_t		ft_strlen(char const *s);
 //routine
 void		routine(t_philo *pl);
 int			not_enough_time(t_philo *pl, int time);
-void		*all_eaten(void *params);
+void		all_eaten(void *params);
 
 //print pl status
 void		msg(int type, t_philo *pl);

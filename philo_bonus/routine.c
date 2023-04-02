@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:13:19 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/02 21:29:54 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/02 21:39:26 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	*check_exit(void *params)
 	{
 		remove_delay(pl->info->tdie / 2);
 		sem_wait(pl->info->read);
-		if (get_time() - pl->t_start > pl->info->tdie && !pl->info->eat_req)
+		if (get_time() - pl->t_start > pl->info->tdie * 2 && !pl->info->eat_req)
 		{
 			sem_post(pl->info->read);
 			return (NULL);
