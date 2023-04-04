@@ -12,7 +12,7 @@ B_SRCS		=	$(addprefix $(BONUS_DIR), $(addsuffix .c, $(B_FILES)))
 B_OBJS		=	$(addprefix $(B_OBJS_DIR), $(addsuffix .o, $(B_FILES)))
 CC			=	gcc
 FLAGS		=	-Wall -Werror -Wextra
-FSAN		=	-fsanitize=thread -g3
+FSAN		=	-fsanitize=address -g3
 PTHREAD		=	-pthread
 RM			=	rm -rf
 

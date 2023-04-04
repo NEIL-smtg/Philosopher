@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 22:07:02 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/30 03:19:28 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/05 03:06:46 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,6 @@ void	remove_delay(int usleep_time)
 			- (i.tv_sec * 1000 + i.tv_usec / 1000);
 		if (diff >= (long long) usleep_time)
 			break ;
-		usleep(50);
+		usleep(500);
 	}
 }

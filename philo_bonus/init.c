@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:08:45 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/02 21:36:28 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/05 03:18:52 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	init_philo(t_info *info)
 		pl[i].num_eat = 0;
 		pl[i].id = i + 1;
 		pl[i].t_start = get_time();
-		pl[i].t_last_eat = get_time();
+		pl[i].t_last_eat = pl[i].t_start;
 		if (init_sem_eaten(&pl[i], i) == -1)
 			return ;
 		id = fork();
