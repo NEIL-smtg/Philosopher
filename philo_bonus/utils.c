@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:09:39 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/05 03:06:51 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/05 18:32:24 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,22 +67,4 @@ long long	get_time(void)
 
 	gettimeofday(&tv, NULL);
 	return ((long long)(tv.tv_sec * 1000 + tv.tv_usec / 1000));
-}
-
-void	remove_delay(int usleep_time)
-{
-	struct timeval	i;
-	struct timeval	j;
-	long long		diff;
-
-	gettimeofday(&i, NULL);
-	while (1)
-	{
-		gettimeofday(&j, NULL);
-		diff = (j.tv_sec * 1000 + j.tv_usec / 1000)
-			- (i.tv_sec * 1000 + i.tv_usec / 1000);
-		if (diff >= (long long) usleep_time)
-			break ;
-		usleep(500);
-	}
 }

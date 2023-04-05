@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:08:45 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/05 03:18:52 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/05 23:00:47 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	destroy_sem(t_info *info)
 	sem_close(info->read);
 	sem_close(info->modify);
 	sem_close(info->forks);
+	sem_close(info->eaten);
+	sem_unlink("sem_eaten");
 	sem_unlink("sem_print");
 	sem_unlink("sem_read");
 	sem_unlink("sem_modify");
@@ -31,6 +33,10 @@ int	init_sem(t_info *info)
 	info->read = sem_open("sem_read", O_CREAT | S_IRWXU, 0644, 1);
 	info->modify = sem_open("sem_modify", O_CREAT | S_IRWXU, 0644, 1);
 	info->forks = sem_open("sem_forks", O_CREAT | S_IRWXU, 0644, info->nphilo);
+	if (info->eat_req)
+		info->eaten = sem_open("sem_eaten", O_CREAT | S_IRWXU, 0644, 0);
+	if (info->eat_req && info->eaten == SEM_FAILED)
+		return (-1);
 	if (info->print == SEM_FAILED || info->read == SEM_FAILED
 		|| info->modify == SEM_FAILED || info->forks == SEM_FAILED)
 		return (-1);
@@ -46,10 +52,9 @@ int	init(int ac, char **av, t_info *info)
 		info->eat_req = 1;
 	info->nphilo = ft_atoi(av[1]);
 	if (info->nphilo == 1)
-	{
 		printf("0 1 has taken a fork\n0 1 die");
+	if (info->nphilo <= 1)
 		return (-1);
-	}
 	info->tdie = ft_atoi(av[2]);
 	info->teat = ft_atoi(av[3]);
 	info->tsleep = ft_atoi(av[4]);
@@ -59,30 +64,10 @@ int	init(int ac, char **av, t_info *info)
 	return (init_sem(info));
 }
 
-int	init_sem_eaten(t_philo *pl, int n)
-{
-	char	*s1;
-	char	*s2;
-
-	if (!pl->info->eat_req)
-		return (1);
-	s2 = ft_itoa(n);
-	s1 = ft_strjoin("sem_eaten_", s2);
-	sem_close(pl->eaten);
-	sem_unlink(s1);
-	pl->eaten = sem_open(s1, O_CREAT | S_IRWXU, 0644, 1);
-	free(s1);
-	free(s2);
-	if (pl->eaten == SEM_FAILED)
-		return (-1);
-	sem_wait(pl->eaten);
-	return (1);
-}
-
 void	init_philo(t_info *info)
 {
 	int			i;
-	t_philo		pl[200];
+	t_philo		pl[250];
 	pid_t		id;
 
 	i = -1;
@@ -93,8 +78,6 @@ void	init_philo(t_info *info)
 		pl[i].id = i + 1;
 		pl[i].t_start = get_time();
 		pl[i].t_last_eat = pl[i].t_start;
-		if (init_sem_eaten(&pl[i], i) == -1)
-			return ;
 		id = fork();
 		if (id == -1)
 			return ;
@@ -103,6 +86,7 @@ void	init_philo(t_info *info)
 	}
 	if (pl->info->eat_req)
 		all_eaten(&pl);
+	destroy_sem(info);
 	waitpid(-1, NULL, 0);
 	kill(0, SIGINT);
 }

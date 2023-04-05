@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:53:10 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/31 20:14:48 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/05 22:20:12 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,9 @@ int	init(int ac, char **av, t_info *info)
 		info->eat_req = 1;
 	info->nphilo = ft_atoi(av[1]);
 	if (info->nphilo == 1)
-	{
-		printf("0 1 has taken a fork\n");
-		printf("0 1 die\n");
+		printf("0 1 has taken a fork\n0 1 die");
+	if (info->nphilo <= 1)
 		return (-1);
-	}
 	info->tdie = ft_atoi(av[2]);
 	info->teat = ft_atoi(av[3]);
 	info->tsleep = ft_atoi(av[4]);
@@ -59,7 +57,7 @@ int	init(int ac, char **av, t_info *info)
 	return (1);
 }
 
-int	init_fork(t_philo pl[][200], int n)
+int	init_fork(t_philo pl[][250], int n)
 {
 	int		i;
 	int		right;
@@ -82,9 +80,9 @@ int	init_fork(t_philo pl[][200], int n)
 
 void	init_philo(t_info *info)
 {
-	pthread_t	th[200];
+	pthread_t	th[250];
 	int			i;
-	t_philo		pl[200];
+	t_philo		pl[250];
 
 	i = -1;
 	if (init_fork(&pl, info->nphilo) == -1)

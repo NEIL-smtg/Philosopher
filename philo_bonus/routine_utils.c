@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 21:06:54 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/02 21:36:32 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/05 23:10:05 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	msg(int type, t_philo *pl)
 {
 	sem_wait(pl->info->print);
+	sem_wait(pl->info->read);
 	if (type == EAT)
 		printf("%lld %d is eating\n", get_time() - pl->t_start, pl->id);
 	else if (type == SLEEP)
@@ -25,6 +26,7 @@ void	msg(int type, t_philo *pl)
 		printf("%lld %d has taken a fork\n", get_time() - pl->t_start, pl->id);
 	else
 		printf("%d %d died\n", pl->info->tdie, pl->id);
+	sem_post(pl->info->read);
 	sem_post(pl->info->print);
 }
 
@@ -32,13 +34,34 @@ void	all_eaten(void *params)
 {
 	t_philo	*pl;
 	int		i;
+	pid_t	id;
 
 	pl = (t_philo *) params;
-	i = -1;
-	if (fork() != 0)
+	id = fork();
+	if (id != 0)
 		return ;
+	i = -1;
 	while (++i < pl->info->nphilo)
-		sem_wait(pl[i].eaten);
+		sem_wait(pl->info->eaten);
+	waitpid(-1, NULL, 0);
 	kill(0, SIGINT);
 	return ;
+}
+
+void	remove_delay(int usleep_time)
+{
+	struct timeval	i;
+	struct timeval	j;
+	long long		diff;
+
+	gettimeofday(&i, NULL);
+	while (1)
+	{
+		gettimeofday(&j, NULL);
+		diff = (j.tv_sec * 1000 + j.tv_usec / 1000)
+			- (i.tv_sec * 1000 + i.tv_usec / 1000);
+		if (diff >= (long long) usleep_time)
+			break ;
+		usleep(500);
+	}
 }
