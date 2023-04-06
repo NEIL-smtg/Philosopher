@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:30:44 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/31 20:18:05 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/06 19:10:08 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ typedef struct s_info
 	int				tsleep;
 	int				num_eat;
 	int				eat_req;
+	int				all_eaten;
 	int				die;
-	pthread_mutex_t	modify;
 	pthread_mutex_t	read;
 	pthread_mutex_t	print;
 }	t_info;
@@ -45,11 +45,11 @@ typedef struct s_philo
 	t_info			*info;
 	int				num_eat;
 	int				id;
-	int				tdie;
 	long long		t_start;
 	long long		t_last_eat;
 	pthread_mutex_t	left;
 	pthread_mutex_t	*right;
+	pthread_t		th;
 }	t_philo;
 
 //init
@@ -63,13 +63,13 @@ void		*routine(void *param);
 void		msg(int type, t_philo *pl);
 int			all_eaten(t_philo *pl);
 int			someone_die(t_philo *pl);
-int			not_enough_time(t_philo *pl, int time);
 int			out_of_time(t_philo *pl);
+void		remove_delay(int usleep_time, t_philo *pl);
 
 //utils
 int			valid_atoi(char *s);
 int			ft_atoi(char *s);
 long long	get_time(void);
-void		remove_delay(int usleep_time);
+void		destroy_all(t_philo **pl, t_info *info);
 
 #endif

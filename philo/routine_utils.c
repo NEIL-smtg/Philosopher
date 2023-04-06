@@ -6,51 +6,27 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 03:18:12 by suchua            #+#    #+#             */
-/*   Updated: 2023/03/31 20:17:56 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/06 19:23:55 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	msg(int type, t_philo *pl)
-{
-	pthread_mutex_lock(&pl->info->print);
-	if (type == TAKEN)
-		printf("%lld %d has taken a fork\n", get_time() - pl->t_start, pl->id);
-	else if (type == EAT)
-		printf("%lld %d is eating\n", get_time() - pl->t_start, pl->id);
-	else if (type == SLEEP)
-		printf("%lld %d is sleeping\n", get_time() - pl->t_start, pl->id);
-	else if (type == DIE)
-		printf("%d %d died\n", pl->info->tdie, pl->id);
-	else
-		printf("%lld %d is thinking\n", get_time() - pl->t_start, pl->id);
-	pthread_mutex_unlock(&pl->info->print);
-}
-
 int	all_eaten(t_philo *pl)
 {
-	int	i;
-
 	pthread_mutex_lock(&pl->info->read);
 	if (!pl->info->eat_req)
 	{
 		pthread_mutex_unlock(&pl->info->read);
 		return (0);
 	}
-	i = -1;
-	while (pl->id != 1)
-		pl--;
-	while (++i < pl->info->nphilo)
+	if (pl->info->eat_req && pl->info->all_eaten == pl->info->nphilo)
 	{
-		if (pl->num_eat < pl->info->num_eat)
-		{
-			pthread_mutex_unlock(&pl->info->read);
-			return (0);
-		}
+		pthread_mutex_unlock(&pl->info->read);
+		return (1);
 	}
 	pthread_mutex_unlock(&pl->info->read);
-	return (1);
+	return (0);
 }
 
 int	someone_die(t_philo *pl)
@@ -65,42 +41,37 @@ int	someone_die(t_philo *pl)
 	return (0);
 }
 
-int	not_enough_time(t_philo *pl, int time)
+int	out_of_time(t_philo *pl)
 {
 	pthread_mutex_lock(&pl->info->read);
-	if (pl->tdie - time < 0)
+	if (get_time() - pl->t_last_eat > pl->info->tdie)
 	{
-		pthread_mutex_lock(&pl->info->modify);
 		pl->info->die++;
-		if (pl->info->die == 1)
-		{
-			remove_delay(100);
-			msg(DIE, pl);
-		}
-		pthread_mutex_unlock(&pl->info->modify);
 		pthread_mutex_unlock(&pl->info->read);
+		if (pl->info->die == 1)
+			msg(DIE, pl);
 		return (1);
 	}
 	pthread_mutex_unlock(&pl->info->read);
 	return (0);
 }
 
-int	out_of_time(t_philo *pl)
+void	remove_delay(int usleep_time, t_philo *pl)
 {
-	pthread_mutex_lock(&pl->info->read);
-	if (get_time() - pl->t_last_eat > pl->info->tdie)
+	struct timeval	i;
+	struct timeval	j;
+	long long		diff;
+
+	gettimeofday(&i, NULL);
+	while (1)
 	{
-		pthread_mutex_lock(&pl->info->modify);
-		pl->info->die++;
-		pthread_mutex_unlock(&pl->info->modify);
-		if (pl->info->die == 1)
-		{
-			remove_delay(100);
-			msg(DIE, pl);
-		}
-		pthread_mutex_unlock(&pl->info->read);
-		return (1);
+		gettimeofday(&j, NULL);
+		diff = (j.tv_sec * 1000 + j.tv_usec / 1000)
+			- (i.tv_sec * 1000 + i.tv_usec / 1000);
+		if (diff >= (long long) usleep_time)
+			break ;
+		usleep(500);
+		if (someone_die(pl))
+			return ;
 	}
-	pthread_mutex_unlock(&pl->info->read);
-	return (0);
 }

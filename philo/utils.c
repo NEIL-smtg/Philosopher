@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 22:07:02 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/05 03:06:46 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/06 17:53:44 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,20 +51,16 @@ long long	get_time(void)
 	return ((long long)(tv.tv_sec * 1000 + tv.tv_usec / 1000));
 }
 
-void	remove_delay(int usleep_time)
+void	destroy_all(t_philo **pl, t_info *info)
 {
-	struct timeval	i;
-	struct timeval	j;
-	long long		diff;
+	int		i;
+	t_philo	*p;
 
-	gettimeofday(&i, NULL);
-	while (1)
-	{
-		gettimeofday(&j, NULL);
-		diff = (j.tv_sec * 1000 + j.tv_usec / 1000)
-			- (i.tv_sec * 1000 + i.tv_usec / 1000);
-		if (diff >= (long long) usleep_time)
-			break ;
-		usleep(500);
-	}
+	i = -1;
+	p = *pl;
+	while (++i < info->nphilo)
+		pthread_mutex_destroy(&p[i].left);
+	pthread_mutex_destroy(&info->print);
+	pthread_mutex_destroy(&info->read);
+	free(p);
 }

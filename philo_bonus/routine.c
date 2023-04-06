@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:13:19 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/05 23:15:11 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/06 19:30:10 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	pl_eat(t_philo *pl)
 	sem_wait(pl->info->read);
 	if (pl->info->eat_req)
 		pl->num_eat++;
- 	if (pl->info->eat_req && pl->num_eat == pl->info->num_eat)
+	if (pl->info->eat_req && pl->num_eat == pl->info->num_eat)
 		sem_post(pl->info->eaten);
 	sem_post(pl->info->read);
 	sem_post(pl->info->modify);
