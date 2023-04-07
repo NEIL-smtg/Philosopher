@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 21:24:23 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/05 22:06:47 by suchua           ###   ########.fr       */
+/*   Updated: 2023/03/31 03:59:50 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,5 +19,5 @@ int	main(int ac, char **av)
 	if (init(ac, av, &info) == -1)
 		exit(EXIT_FAILURE);
 	init_philo(&info);
-	exit(0);
+	exit(info.pl_status);
 }

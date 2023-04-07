@@ -1,7 +1,7 @@
 NAME		=	phil
 BONUS_NAME	=	phil_bonus
 FILES		=	main init routine utils routine_utils
-B_FILES		=	main init routine utils routine_utils
+B_FILES		=	main init routine utils routine_utils libft libft_utils
 MAN_DIR		=	philo/
 BONUS_DIR	=	philo_bonus/
 OBJS_DIR	=	objs/
@@ -12,7 +12,7 @@ B_SRCS		=	$(addprefix $(BONUS_DIR), $(addsuffix .c, $(B_FILES)))
 B_OBJS		=	$(addprefix $(B_OBJS_DIR), $(addsuffix .o, $(B_FILES)))
 CC			=	gcc
 FLAGS		=	-Wall -Werror -Wextra
-FSAN		=	-fsanitize=thread -g
+FSAN		=	-fsanitize=thread -g3
 PTHREAD		=	-pthread
 RM			=	rm -rf
 
@@ -24,7 +24,7 @@ $(OBJS_DIR)%.o:$(MAN_DIR)%.c
 	$(CC) $(FLAGS) -c $< -o $@
 
 $(NAME) : $(OBJS)
-	$(CC) $(FLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(FLAGS) $(PTHREAD) -o $(NAME) $(OBJS)
 
 bonus:
 	mkdir -p $(B_OBJS_DIR)
@@ -34,7 +34,7 @@ $(B_OBJS_DIR)%.o:$(BONUS_DIR)%.c
 	$(CC) $(FLAGS) -c $< -o $@
 
 $(BONUS_NAME): $(B_OBJS)
-	$(CC) $(FLAGS) -o $(BONUS_NAME) $(B_OBJS)
+	$(CC) $(FLAGS) $(PTHREAD) -o $(BONUS_NAME) $(B_OBJS)
 
 clean:
 	$(RM) $(OBJS_DIR) $(B_OBJS_DIR)

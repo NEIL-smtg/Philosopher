@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 18:52:02 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/05 22:07:22 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/07 19:11:53 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ typedef struct s_info
 	int				num_eat;
 	int				eat_req;
 	int				die;
+	int				pl_status;
 	sem_t			*print;
-	sem_t			*read;
 	sem_t			*modify;
-	sem_t			*forks;
 	sem_t			*eaten;
+	sem_t			*forks;
 }	t_info;
 
 typedef struct s_philo
@@ -55,6 +55,8 @@ typedef struct s_philo
 	long long		t_start;
 	long long		t_last_eat;
 	pthread_t		exit_th;
+	sem_t			*read;
+	char			*semread_name;
 }	t_philo;
 
 void		init_philo(t_info *info);
@@ -66,6 +68,11 @@ int			valid_atoi(char *s);
 int			ft_atoi(char *s);
 long long	get_time(void);
 void		remove_delay(int usleep_time);
+
+//libft
+char		*ft_strjoin(char *s1, char *s2);
+char		*ft_itoa(int n);
+size_t		ft_strlen(char const *s);
 
 //routine
 void		routine(t_philo *pl);

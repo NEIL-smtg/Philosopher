@@ -6,7 +6,7 @@
 /*   By: suchua <suchua@student.42kl.edu.my>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 20:08:45 by suchua            #+#    #+#             */
-/*   Updated: 2023/04/05 23:00:47 by suchua           ###   ########.fr       */
+/*   Updated: 2023/04/07 20:23:21 by suchua           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,10 @@
 void	destroy_sem(t_info *info)
 {
 	sem_close(info->print);
-	sem_close(info->read);
-	sem_close(info->modify);
 	sem_close(info->forks);
 	sem_close(info->eaten);
 	sem_unlink("sem_eaten");
 	sem_unlink("sem_print");
-	sem_unlink("sem_read");
-	sem_unlink("sem_modify");
 	sem_unlink("sem_forks");
 }
 
@@ -30,15 +26,12 @@ int	init_sem(t_info *info)
 {
 	destroy_sem(info);
 	info->print = sem_open("sem_print", O_CREAT | S_IRWXU, 0644, 1);
-	info->read = sem_open("sem_read", O_CREAT | S_IRWXU, 0644, 1);
-	info->modify = sem_open("sem_modify", O_CREAT | S_IRWXU, 0644, 1);
 	info->forks = sem_open("sem_forks", O_CREAT | S_IRWXU, 0644, info->nphilo);
 	if (info->eat_req)
 		info->eaten = sem_open("sem_eaten", O_CREAT | S_IRWXU, 0644, 0);
 	if (info->eat_req && info->eaten == SEM_FAILED)
 		return (-1);
-	if (info->print == SEM_FAILED || info->read == SEM_FAILED
-		|| info->modify == SEM_FAILED || info->forks == SEM_FAILED)
+	if (info->print == SEM_FAILED || info->forks == SEM_FAILED)
 		return (-1);
 	return (1);
 }
@@ -67,24 +60,24 @@ int	init(int ac, char **av, t_info *info)
 void	init_philo(t_info *info)
 {
 	int			i;
-	t_philo		pl[250];
+	t_philo		pl;
 	pid_t		id;
 
 	i = -1;
 	while (++i < info->nphilo)
 	{
-		pl[i].info = info;
-		pl[i].num_eat = 0;
-		pl[i].id = i + 1;
-		pl[i].t_start = get_time();
-		pl[i].t_last_eat = pl[i].t_start;
+		pl.id = i + 1;
+		pl.info = info;
+		pl.num_eat = 0;
+		pl.t_start = get_time();
+		pl.t_last_eat = pl.t_start;
 		id = fork();
 		if (id == -1)
 			return ;
 		if (id == 0)
-			routine(&pl[i]);
+			routine(&pl);
 	}
-	if (pl->info->eat_req)
+	if (pl.info->eat_req)
 		all_eaten(&pl);
 	destroy_sem(info);
 	waitpid(-1, NULL, 0);
